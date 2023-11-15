@@ -2,13 +2,14 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import os
 
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 app.config['SECRET_KEY'] = '44495c599ff7e41b640de11a238f0898'
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://banco_projetocomunidade_user:GEnEHbXVExtAQE4ZJ7H3bigOuadYAvxW@dpg-cl5eapt6fh7c73elvgfg-a.oregon-postgres.render.com/banco_projetocomunidade"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)

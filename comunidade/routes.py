@@ -58,6 +58,7 @@ def criar_conta():
             usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha,
                               idade=form_criarconta.idade.data, altura=form_criarconta.altura.data,
                               peso=form_criarconta.peso.data, frequencia=form_criarconta.frequencia.data)
+            usuario.calc_IMC()
             db.session.add(usuario)
             db.session.commit()
         # flash(f'Bem-vindo(a), {}')

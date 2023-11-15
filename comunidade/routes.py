@@ -33,7 +33,7 @@ def login():
     if form_login.validate_on_submit():
         # flash(f'Bem-vindo(a), {}')
         usuario = Usuario.query.filter_by(email=form_login.email.data).first()
-        if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
+        if usuario and bcrypt.check_password_hash(usuario.senha.encode('utf-8'), form_login.senha.data):
             flash(f'Login feito com sucesso para o E-mail {form_login.email.data}', 'alert-success')
             login_user(usuario, remember=form_login.lembrar_dados.data)
             par_next = request.args.get('next')
@@ -54,7 +54,7 @@ def criar_conta():
 
     if form_criarconta.validate_on_submit():
         with app.app_context():
-            senha = bcrypt.generate_password_hash(form_criarconta.senha.data)
+            senha = bcrypt.generate_password_hash(form_criarconta.senha.data).decode('utf-8')
             usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha,
                               idade=form_criarconta.idade.data, altura=form_criarconta.altura.data,
                               peso=form_criarconta.peso.data, frequencia=form_criarconta.frequencia.data)

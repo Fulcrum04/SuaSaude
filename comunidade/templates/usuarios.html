@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="container">
+    <h1>Usuários</h1>
+    <hr>
+    {% for usuario in lista_usuarios %}
+    <div class="container mt-5 d-flex justify-content-center">
+
+            <div class="card p-3">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="image pe-2">
+                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(usuario.foto_perfil)) }}">
+                </div>
+
+                <div class="ml-3 w-100">
+
+                   <h4 class="mb-0 mt-0">{{ usuario.username }}</h4>
+
+                   <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+
+                    <div class="d-flex flex-column">
+
+                        <span class="articles">Idade</span>
+                        <span class="number1">{{ usuario.idade }}</span>
+
+                    </div>
+                    <div class="d-flex flex-column">
+
+                        <span class="rating">Posts</span>
+                        <span class="number3">{{ usuario.contar_posts() }}</span>
+
+                    </div>
+
+
+                </div>
+
+
+                </div>
+
+            </div>
+
+         </div>
+    <hr>
+    {% endfor %}
+  </div>
+{% endblock %}

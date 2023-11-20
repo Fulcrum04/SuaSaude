@@ -17,7 +17,6 @@ with app.app_context():
         senha = db.Column(db.String, nullable=False)
         email = db.Column(db.String, nullable=False, unique=True)
         foto_perfil = db.Column(db.String, nullable=False, default='default.jpg')
-        posts = db.relationship('Post', backref='autor', lazy=True)
         idade = db.Column(db.Integer)
         peso = db.Column(db.Float)
         altura = db.Column(db.Float)
@@ -36,8 +35,7 @@ with app.app_context():
         __tablename__ = 'Post'
         id = db.Column(db.Integer, primary_key=True)
         titulo = db.Column(db.String, nullable=False)
-        corpo = db.Column(db.Text, nullable=False)
-        data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-        id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+        address = db.Column(db.String)
+        tipo = db.Column(db.Integer, nullable=False)
 
     db.create_all()

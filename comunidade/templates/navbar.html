@@ -21,7 +21,6 @@
           <ul class="dropdown-menu">
             {%if current_user.is_authenticated%}
               <li><a class="dropdown-item" href="{{url_for('perfil')}}#">Visualizar Perfil</a></li>
-              <li><a class="dropdown-item" href="{{url_for('criar_post')}}">Criar post</a></li>
             <li><a class="dropdown-item" href="{{url_for('sair')}}">Sair</a></li>
             {%else%}
               <li><a class="dropdown-item" href="{{url_for('login')}}#">Login</a></li>

@@ -9,31 +9,28 @@ from PIL import Image
 
 
 @app.route('/')
+@login_required
 def home():
-    #se o usuário já tiver realizado o login
-    if current_user:
-        #filtrar posts de acordo com o IMC do usuário
-        if current_user.IMC < 18.6:
-            tipo = 1
-            posts = Links.query.filter_by("tipo" == tipo)
-        elif current_user.IMC < 25:
-            tipo = 2
-            posts = Links.query.filter_by("tipo" == tipo)
-        elif current_user.IMC < 30:
-            tipo = 3
-            posts = Links.query.filter_by("tipo" == tipo)
-        elif current_user.IMC < 35:
-            tipo = 4
-            posts = Links.query.filter_by("tipo" == tipo)
-        elif current_user.IMC < 40:
-            tipo = 5
-            posts = Links.query.filter_by("tipo" == tipo)
-        else:
-            tipo = 6
-            posts = Links.query.filter_by("tipo" == tipo)
-        return render_template('home_log.html', posts=posts, tipo=tipo)
+    #filtrar posts de acordo com o IMC do usuário
+    if current_user.IMC < 18.6:
+        tipo = 1
+        posts = Links.query.filter_by("tipo" == tipo)
+    elif current_user.IMC < 25:
+        tipo = 2
+        posts = Links.query.filter_by("tipo" == tipo)
+    elif current_user.IMC < 30:
+        tipo = 3
+        posts = Links.query.filter_by("tipo" == tipo)
+    elif current_user.IMC < 35:
+        tipo = 4
+        posts = Links.query.filter_by("tipo" == tipo)
+    elif current_user.IMC < 40:
+        tipo = 5
+        posts = Links.query.filter_by("tipo" == tipo)
     else:
-        return render_template('home.html')
+        tipo = 6
+        posts = Links.query.filter_by("tipo" == tipo)
+    return render_template('home_log.html', posts=posts, tipo=tipo)
 
 
 @app.route('/contato')

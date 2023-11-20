@@ -14,7 +14,7 @@ class FormCriarConta(FlaskForm):
     idade = IntegerField(label="Idade", validators=[DataRequired()])
     altura = FloatField(label="Altura", validators=[DataRequired()])
     peso = FloatField(label="Peso", validators=[DataRequired()])
-    frequencia = IntegerField(label="Quantos dias por semana em média você pratica exercícios físicos?")
+    frequencia = IntegerField(label="Quantos minutos por semana em média você pratica exercícios físicos?")
     botao_submit_criarconta = SubmitField('Criar Conta')
 
     def validate_email(self, email):
@@ -35,11 +35,14 @@ class FormEditarPerfil(FlaskForm):
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     botao_submit_editarperfil = SubmitField('Confirmar edição')
     foto_perfil = FileField('Atualizar foto de perfil', validators=[FileAllowed(['jpg', 'png'])])
-    idade = StringField("Idade")
+    idade = IntegerField(label="Idade", validators=[DataRequired()])
+    altura = FloatField(label="Altura", validators=[DataRequired()])
+    peso = FloatField(label="Peso", validators=[DataRequired()])
+    frequencia = IntegerField(label="Quantos minutos por semana em média você pratica exercícios físicos?",
+                              validators=[DataRequired()])
 
     def validate_email(self, email):
         if current_user.email != email.data:
             usuario = Usuario.query.filter_by(email=email.data).first()
             if usuario:
                 raise ValidationError("Email já cadastrado. Insira outro email para continuar.")
-

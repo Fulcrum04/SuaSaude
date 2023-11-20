@@ -130,6 +130,9 @@ def editar_perfil():
         current_user.email = form.email.data
         current_user.username = form.username.data
         current_user.idade = form.idade.data
+        current_user.altura = form.altura.data
+        current_user.peso = form.peso.data
+        current_user.frequencia = form.frequencia.data
         if form.foto_perfil.data:
             nome_imagem = salvar_imagem(form.foto_perfil.data)
             current_user.foto_perfil = nome_imagem

@@ -10,7 +10,7 @@ from PIL import Image
 
 @app.route('/')
 @login_required
-def home
+def home():
     if 1 == 3:
         #filtrar posts de acordo com o IMC do usuário
         if current_user.IMC < 18.6:

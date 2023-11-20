@@ -30,6 +30,18 @@ def home():
         else:
             tipo = 6
             posts = Links.query.filter_by(tipo=tipo)
+        if current_user.idade < 18:
+            faixa_etaria = 1
+            frequencia_minima = 300
+            frequencia_ideal = 420
+        elif current_user.idade < 64:
+            faixa_etaria = 2
+            frequencia_minima = 150
+            frequencia_ideal = 300
+        else:
+            faixa_etaria = 3
+            frequencia_minima = 75
+            frequencia_ideal = 150
         return render_template('home_log.html', posts=posts, tipo=tipo)
     else:
         return render_template("home.html")
@@ -57,7 +69,6 @@ def login():
                 return redirect(url_for('home'))
         else:
             flash("Falha no login! Email ou senha incorretos.", 'alert-danger')
-
 
     return render_template('login.html', form_login=form_login)
 

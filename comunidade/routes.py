@@ -57,7 +57,6 @@ def login():
     form_login = FormLogin()
 
     if form_login.validate_on_submit():
-        # flash(f'Bem-vindo(a), {}')
         usuario = Usuario.query.filter_by(email=form_login.email.data).first()
         if usuario and bcrypt.check_password_hash(usuario.senha.encode('utf-8'), form_login.senha.data):
             flash(f'Login feito com sucesso para o E-mail {form_login.email.data}', 'alert-success')
@@ -88,6 +87,8 @@ def criar_conta():
             db.session.commit()
         # flash(f'Bem-vindo(a), {}')
         flash(f'Conta criada com sucesso para o E-mail {form_criarconta.email.data}', 'alert-success')
+        usuario = Usuario.query.filter_by(email=form_criarconta.email.data).first()
+        login_user(usuario, remember=True)
         return redirect(url_for('home'))
 
     return render_template('criar_conta.html', form_criarconta=form_criarconta)

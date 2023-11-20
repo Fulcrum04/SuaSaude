@@ -139,16 +139,17 @@ def editar_perfil():
             nome_imagem = salvar_imagem(form.foto_perfil.data)
             current_user.foto_perfil = nome_imagem
         flash('Perfil atualizado com sucesso!', 'alert-success')
+        current_user.calc_IMC()
         db.session.commit()
         return redirect(url_for('perfil'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.username.data = current_user.username
         form.idade.data = current_user.idade
-        current_user.altura = current_user.altura
-        current_user.peso = current_user.peso
-        current_user.frequencia = current_user.frequencia
-        
+        form.altura.data = current_user.altura
+        form.peso.data = current_user.peso
+        form.frequencia.data = current_user.frequencia
+
     return render_template('editar_perfil.html', foto_perfil=foto_perfil, form=form)
 
 

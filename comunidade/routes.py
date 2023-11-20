@@ -13,7 +13,7 @@ def home():
     #se o usuário já tiver realizado o login
     if current_user:
         #filtrar posts de acordo com o IMC do usuário
-        if current_user.IMC <= 18.5:
+        if current_user.IMC < 18.6:
             tipo = 1
             posts = Links.query.filter_by("tipo" == tipo)
         elif current_user.IMC < 25:

@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, abort
-from comunidade.forms import FormCriarConta, FormLogin, FormEditarPerfil, FormCriarPost
+from comunidade.forms import FormCriarConta, FormLogin, FormEditarPerfil
 from comunidade import app, db, bcrypt, login_manager
-from comunidade.models import Usuario, Post
+from comunidade.models import Usuario, Links
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
@@ -10,8 +10,30 @@ from PIL import Image
 
 @app.route('/')
 def home():
-    posts = Post.query.all()
-    return render_template('home.html', posts=posts)
+    #se o usuário já tiver realizado o login
+    if current_user:
+        #filtrar posts de acordo com o IMC do usuário
+        if current_user.imc <= 18.5:
+            tipo = 1
+            posts = Links.query.filter_by("tipo" == tipo)
+        elif current_user.imc < 25:
+            tipo = 2
+            posts = Links.query.filter_by("tipo" == tipo)
+        elif current_user.imc < 30:
+            tipo = 3
+            posts = Links.query.filter_by("tipo" == tipo)
+        elif current_user.imc < 35:
+            tipo = 4
+            posts = Links.query.filter_by("tipo" == tipo)
+        elif current_user.imc < 40:
+            tipo = 5
+            posts = Links.query.filter_by("tipo" == tipo)
+        else:
+            tipo = 6
+            posts = Links.query.filter_by("tipo" == tipo)
+        return render_template('home_log.html', posts=posts, tipo=tipo)
+    else:
+        return render_template('home.html')
 
 
 @app.route('/contato')
@@ -76,18 +98,6 @@ def sair():
     return redirect(url_for('home'))
 
 
-@app.route('/post/criar', methods=['GET', 'POST'])
-@login_required
-def criar_post():
-    form = FormCriarPost()
-    if form.validate_on_submit():
-        post = Post(titulo=form.titulo.data, corpo=form.corpo.data, autor=current_user)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('home'))
-    return render_template('criar_post.html', form=form)
-
-
 @app.route('/perfil')
 @login_required
 def perfil():
@@ -130,28 +140,10 @@ def editar_perfil():
     return render_template('editar_perfil.html', foto_perfil=foto_perfil, form=form)
 
 
-@app.route('/post/<post_id>', methods=['GET', 'POST'])
-@login_required
-def exibir_post(post_id):
-    post = Post.query.get(post_id)
-    if current_user == post.autor:
-        form = FormCriarPost()
-        if request.method == 'GET':
-            form.corpo.data = post.corpo
-            form.titulo.data = post.titulo
-        elif form.validate_on_submit():
-            post.titulo = form.titulo.data
-            post.corpo = form.corpo.data
-            db.session.commit()
-            flash('Post atualizado com sucesso!', 'alert-success')
-            return redirect(url_for('home'))
-        return render_template('exibir_post.html', post=post, form=form)
-    return render_template('exibir_post.html', post=post)
-
 @app.route('/post/<post_id>/excluir', methods=['GET', 'POST'])
 @login_required
 def excluir_post(post_id):
-    post = Post.query.get(post_id)
+    post = Links.query.get(post_id)
     if current_user == post.autor:
         db.session.delete(post)
         db.session.commit()

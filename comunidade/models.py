@@ -31,8 +31,8 @@ with app.app_context():
             self.IMC = imc
 
 
-    class Post(db.Model):
-        __tablename__ = 'Post'
+    class Links(db.Model):
+        __tablename__ = 'Links'
         id = db.Column(db.Integer, primary_key=True)
         titulo = db.Column(db.String, nullable=False)
         address = db.Column(db.String)

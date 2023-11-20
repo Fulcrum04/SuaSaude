@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="container mt-3">
+    <h1 style="color: green">Sua Saúde</h1>
+    <h2>Primeiro projeto de site por Rafael Patrick de Souza Oliveira</h2>
+    <hr>
+    {% for post in posts %}
+      <div class="row border mt-4 p-3 meupost">
+        <div class="col col-9">
+          <a style="text-decoration: none" href="{{ post.link }}"><h4>{{ post.titulo }}</h4></a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

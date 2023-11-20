@@ -14,7 +14,7 @@ class FormCriarConta(FlaskForm):
     idade = IntegerField(label="Idade", validators=[DataRequired()])
     altura = FloatField(label="Altura", validators=[DataRequired()])
     peso = FloatField(label="Peso", validators=[DataRequired()])
-    frequencia = IntegerField(label="Quantos dias por semana em média você pratica exercícios físicos?", validators=[DataRequired()])
+    frequencia = IntegerField(label="Quantos dias por semana em média você pratica exercícios físicos?")
     botao_submit_criarconta = SubmitField('Criar Conta')
 
     def validate_email(self, email):

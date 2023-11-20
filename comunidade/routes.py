@@ -9,9 +9,8 @@ from PIL import Image
 
 
 @app.route('/')
-@login_required
 def home():
-    if 1 == 3:
+    if current_user.is_authenticated:
         #filtrar posts de acordo com o IMC do usuário
         if current_user.IMC < 18.6:
             tipo = 1
@@ -33,8 +32,7 @@ def home():
             posts = Links.query.filter_by("tipo" == tipo)
         return render_template('home_log.html', posts=posts, tipo=tipo)
     else:
-        return render_template('home.html')
-    
+        return render_template("home.html")
 
 
 @app.route('/contato')
@@ -141,16 +139,5 @@ def editar_perfil():
     return render_template('editar_perfil.html', foto_perfil=foto_perfil, form=form)
 
 
-@app.route('/post/<post_id>/excluir', methods=['GET', 'POST'])
-@login_required
-def excluir_post(post_id):
-    post = Links.query.get(post_id)
-    if current_user == post.autor:
-        db.session.delete(post)
-        db.session.commit()
-        flash('Post excluído com sucesso!', 'alert-danger')
-        return redirect(url_for('home'))
-    else:
-        abort(403)
 
 

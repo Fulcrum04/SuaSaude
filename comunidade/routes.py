@@ -145,6 +145,10 @@ def editar_perfil():
         form.email.data = current_user.email
         form.username.data = current_user.username
         form.idade.data = current_user.idade
+        current_user.altura = current_user.altura
+        current_user.peso = current_user.peso
+        current_user.frequencia = current_user.frequencia
+        
     return render_template('editar_perfil.html', foto_perfil=foto_perfil, form=form)
 
 

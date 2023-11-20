@@ -40,13 +40,6 @@ def contato():
     return render_template('contato.html')
 
 
-@app.route('/usuarios')
-@login_required
-def usuarios():
-    lista_usuarios = Usuario.query.all()
-    return render_template('usuarios.html', lista_usuarios=lista_usuarios)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form_login = FormLogin()

@@ -42,7 +42,8 @@ def home():
             faixa_etaria = 3
             frequencia_minima = 75
             frequencia_ideal = 150
-        return render_template('home_log.html', posts=posts, tipo=tipo)
+        return render_template('home_log.html', posts=posts, tipo=tipo, faixa_etaria=faixa_etaria,
+                               frequencia_ideal=frequencia_ideal, frequencia_minima=frequencia_minima)
     else:
         return render_template("home.html")
 

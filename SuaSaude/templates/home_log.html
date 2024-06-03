@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="container mt-3">
+    <h1 style="color: green">Sua Saúde</h1>
+    <h2>Aqui você encontra dicas de saúde específicas para as suas condições.</h2>
+    <hr>
+    {% if tipo == 1 %}
+    <h3>De acordo com a OMS, você está abaixo do peso ideal.</h3>
+    Recomenda-se procurar a orientação de profissionais de saúde para avaliar possíveis causas subjacentes,
+    adotar uma dieta equilibrada rica em nutrientes essenciais e incorporar atividade física regular.
+    Além disso, considerar o aspecto emocional e buscar apoio psicológico pode ser fundamental,
+    já que fatores emocionais podem influenciar o apetite e o peso corporal.
+    A jornada em direção a um peso saudável é única para cada pessoa,
+    exigindo paciência consigo mesmo e um compromisso gradual e sustentável com mudanças saudáveis no estilo de vida.
+    {% endif %}
+    {% if tipo == 2 %}
+    <h3>Parabéns! De acordo com a OMS, você está no peso ideal.</h3>
+    Manter um peso considerado ideal pela OMS é um passo significativo em direção à saúde e ao bem-estar geral.
+    Nesse contexto, é fundamental reconhecer a importância contínua da nutrição equilibrada e da prática regular de
+    atividade física. Uma dieta nutritiva, composta por uma variedade de alimentos, fornece os nutrientes essenciais
+    para sustentar a saúde a longo prazo, enquanto a atividade física contribui não apenas para a manutenção do peso,
+    mas também para a saúde cardiovascular, a força muscular e o equilíbrio emocional. Incorporar hábitos saudáveis de
+    alimentação e exercício não apenas apoia a estabilidade do peso, mas também promove uma qualidade de vida elevada,
+    contribuindo para a prevenção de diversas condições de saúde.
+    {% endif %}
+    {% if tipo == 3 %}
+    <h3>De acordo com a OMS, você está um pouco acima do peso.</h3>
+    Para aqueles que se encontram ligeiramente acima do peso de acordo com as diretrizes da OMS,
+    é crucial adotar uma abordagem equilibrada e realista em relação à saúde. Pequenas mudanças nos hábitos alimentares
+    e na rotina de exercícios podem ter um impacto significativo ao longo do tempo. Priorizar escolhas alimentares
+    mais saudáveis, como aumentar o consumo de frutas, vegetais e grãos integrais, e moderar a ingestão de alimentos
+    processados e ricos em calorias vazias, pode ser um primeiro passo positivo. Além disso, incorporar uma rotina de
+    exercícios regular, que pode variar de caminhadas a atividades mais intensas, é fundamental para promover a perda
+    de peso gradual e sustentável. O foco deve ser na promoção da saúde global e na aceitação do corpo, cultivando
+    hábitos que contribuam para uma vida ativa e equilibrada. Consultar um profissional de saúde ou um nutricionista
+    pode fornecer orientações personalizadas e apoio nesse processo de busca por um peso saudável.
+    {% endif %}
+    {% if tipo == 4 %}
+    <h3>De acordo com a OMS, você está com obesidade grau 1.</h3>
+    A obesidade, quando não gerenciada, pode estar associada a riscos significativos para a saúde, como diabetes,
+    doenças cardiovasculares e outras condições crônicas. Nesse contexto, é aconselhável buscar a orientação de
+    profissionais de saúde, como médicos e nutricionistas, para desenvolver um plano de gerenciamento personalizado.
+    Modificações na dieta, com foco em escolhas alimentares saudáveis e porções controladas, são cruciais.
+    Além disso, a implementação de uma rotina regular de atividade física, adaptada às capacidades individuais,
+    é vital para a perda de peso gradual e sustentável. O apoio psicológico também desempenha um papel essencial,
+    ajudando na motivação e no enfrentamento de desafios emocionais associados à obesidade. Ao abordar a obesidade
+    grau 1 de maneira holística, é possível trabalhar em direção a uma vida mais saudável e reduzir os riscos à
+    saúde associados a essa condição.
+    {% endif %}
+    {% if tipo == 5 %}
+    <h3>De acordo com a OMS, você está com obesidade grau 2.</h3>
+    Consultar um profissional de saúde, como um médico ou um especialista em nutrição,
+    é o primeiro passo essencial para desenvolver um plano personalizado de gestão de peso.
+    Incorporar mudanças graduais nos hábitos alimentares, focando em porções controladas,
+    escolhas alimentares mais saudáveis e limitação de alimentos processados, pode ser fundamental.
+    Além disso, a implementação de uma rotina de exercícios adaptada às capacidades individuais,
+    que inclua atividades aeróbicas e de resistência, pode ser benéfica para a perda de peso e a melhoria geral
+    da saúde. O apoio psicológico também desempenha um papel importante, ajudando a lidar com fatores emocionais
+    relacionados ao peso. O processo de gerenciamento da obesidade de grau 2 é desafiador, mas com paciência,
+    determinação e suporte profissional, é possível adotar mudanças saudáveis e sustentáveis para promover o
+    bem-estar a longo prazo.
+    {% endif %}
+    {% if tipo == 6 %}
+    <h3>De acordo com a OMS, você está com obesidade grau 3.</h3>
+    A busca por uma vida mais saudável e sustentável deve envolver uma abordagem multidisciplinar, com a orientação
+    de profissionais de saúde, incluindo médicos, nutricionistas e, quando apropriado, especialistas em saúde mental.
+    Estratégias personalizadas que envolvam modificações graduais nos hábitos alimentares, a introdução de uma rotina
+    de exercícios adaptada e o acompanhamento regular são fundamentais. A obesidade grau 3 muitas vezes está associada
+    a riscos significativos para a saúde, como doenças cardiovasculares e diabetes, portanto, a gestão integrada e a
+    busca de apoio psicológico são aspectos essenciais nesse processo. A jornada pode ser desafiadora, mas com apoio
+    adequado e mudanças progressivas, é possível melhorar a qualidade de vida e trabalhar em direção a um peso
+    mais saudável.
+    {% endif %}
+    <p>
+    Separamos um artigo que pode ajudar você:
+    <p>
+    {% for post in posts %}
+      <div class="row border mt-4 p-3 meupost">
+        <div class="col col-9">
+          <a style="text-decoration: none" href="{{ post.address}}"><h4>{{ post.titulo }}</h4></a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="container mt-3">
+    {% if current_user.frequencia >= frequencia_ideal %}
+    <h3>Parabéns! De acordo com a OMS, você mantém a frequência ideal de exercícios físicos para a sua faixa etária.</h3>
+    Manter o corpo ativo é crucial para promover a saúde física e mental. Para otimizar seu bem estar, mantenha sua
+    rotina de exercícios físicos, dê atenção à sua nutrição e ao seu sono.
+    <p></p>
+    <p>
+      Aqui estão algumas dicas para manter uma rotina saudável!
+    </p>
+    <div class="row border mt-4 p-3 meupost">
+    <div class="col col-9">
+      <a style="text-decoration: none" href="https://blog.sabin.com.br/autocuidado/como-ter-uma-rotina-saudavel/"><h4>8 Dicas para uma rotina saudável.</h4></a>
+    </div>
+    </div>
+    {% elif current_user.frequencia >= frequencia_minima %}
+    <h3>Você está no caminho certo! De acordo com a OMS, você mantém a frequência mínima de exercícios físicos para a sua faixa etária.</h3>
+    Para otimizar seus resultados e melhorar seu bem estar, tente reservar mais tempo na sua semana para se exercitar,
+    realizando {{ frequencia_ideal }} minutos de exercício por semana.
+    <p></p>
+    <p>
+    Aqui estão algumas dicas de exercícios que você pode fazer em casa!
+    </p>
+<div class="row border mt-4 p-3 meupost">
+    <div class="col col-9">
+      <a style="text-decoration: none" href="https://www.ecycle.com.br/exercicio-para-fazer-em-casa/"><h4>20 Exercícios para fazer em Casa</h4></a>
+    </div>
+</div>
+    {% else %}
+    <h3>De acordo com a OMS, você está abaixo da frequência mínima de exercícios físicos para a sua faixa etária.</h3>
+    Para melhorar seu bem estar, evitar problemas de saúde e física e mental, tente reservar um tempo na sua semana para
+    se exercitar, realizando pelo menos {{ frequencia_minimo }} minutos de exercício por semana.
+    <p></p>
+    <p>
+    Aqui está um artigo sobre a importância de se exercitar:
+    </p>
+    <div class="row border mt-4 p-3 meupost">
+    <div class="col col-9">
+      <a style="text-decoration: none" href="https://conteudo.omronbrasil.com/a-importancia-do-exercicio-fisico/"><h4>9 RAZÕES QUE COMPROVAM A IMPORTÂNCIA DO EXERCÍCIO FÍSICO</h4></a>
+    </div>
+    </div>
+
+
+    {% endif %}
+  </div>
+{% endblock %}

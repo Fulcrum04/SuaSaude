@@ -1,0 +1,103 @@
+{% extends 'perfil.html' %}
+
+{% block form_editar_perfil %}
+
+<div class="container border mt-5">
+    <h1>Editar perfil</h1>
+    <form method="POST" action="" class="border p-4 mt-2" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      <div class="form-group">
+                            {{ form.username.label(class="form-control-label") }}
+                            {% if form.username.errors %}
+                                {{ form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.username.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.username(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label") }}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.email.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.email(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.idade.label(class="form-control-label") }}
+                            {% if form.idade.errors %}
+                                {{ form.idade(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.idade.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.idade(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.altura.label(class="form-control-label") }}
+                            {% if form.altura.errors %}
+                                {{ form.altura(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.altura.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.altura(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.peso.label(class="form-control-label") }}
+                            {% if form.peso.errors %}
+                                {{ form.peso(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.peso.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.peso(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.frequencia.label(class="form-control-label") }}
+                            {% if form.frequencia.errors %}
+                                {{ form.frequencia(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.frequencia.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.frequencia(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{form.foto_perfil.label}}
+                            {{form.foto_perfil(class="form-control-file")}}
+
+                            {% if form.foto_perfil.errors %}
+                                {% for erro in form.foto_perfil.errors %}
+                                    <span>{{ erro }}</span><br>
+                                {% endfor %}
+                            {% endif %}
+
+                        </div>
+      {{ form.botao_submit_editarperfil(class="btn btn-primary mt-2") }}
+    </form>
+    <p></p>
+  </div>
+
+{% endblock %}

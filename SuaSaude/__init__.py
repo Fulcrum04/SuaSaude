@@ -9,7 +9,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 app.config['SECRET_KEY'] = 'b2deb66af296d0f6038efe5f0e3544ef'
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///SuaSaude.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)

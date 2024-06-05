@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, abort
 from SuaSaude.forms import FormCriarConta, FormLogin, FormEditarPerfil
 from SuaSaude import app, db, bcrypt, login_manager
-from SuaSaude.models import Usuario, Links, table_to_dataframe
+from SuaSaude.models import Usuario, Links, table_to_dataframe, classificar_usuario
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
@@ -13,37 +13,7 @@ import matplotlib.pyplot as plt
 @app.route('/')
 def home():
     if current_user.is_authenticated:
-        #filtrar posts de acordo com o IMC do usuário
-        if current_user.IMC < 18.6:
-            tipo = 1
-            posts = Links.query.filter_by(tipo=tipo)
-        elif current_user.IMC < 25:
-            tipo = 2
-            posts = Links.query.filter_by(tipo=tipo)
-        elif current_user.IMC < 30:
-            tipo = 3
-            posts = Links.query.filter_by(tipo=tipo)
-        elif current_user.IMC < 35:
-            tipo = 4
-            posts = Links.query.filter_by(tipo=tipo)
-        elif current_user.IMC < 40:
-            tipo = 5
-            posts = Links.query.filter_by(tipo=tipo)
-        else:
-            tipo = 6
-            posts = Links.query.filter_by(tipo=tipo)
-        if current_user.idade < 18:
-            faixa_etaria = 1
-            frequencia_minima = 300
-            frequencia_ideal = 420
-        elif current_user.idade < 64:
-            faixa_etaria = 2
-            frequencia_minima = 150
-            frequencia_ideal = 300
-        else:
-            faixa_etaria = 3
-            frequencia_minima = 75
-            frequencia_ideal = 150
+        tipo, posts, faixa_etaria, frequencia_minima, frequencia_ideal = classificar_usuario(current_user)
         return render_template('home_log.html', posts=posts, tipo=tipo, faixa_etaria=faixa_etaria,
                                frequencia_ideal=frequencia_ideal, frequencia_minima=frequencia_minima)
     else:
@@ -57,6 +27,20 @@ def contato():
 
 @app.route('/dados')
 def dados():
+    tipo, posts, faixa_etaria, frequencia_minima, frequencia_ideal = classificar_usuario(current_user)
+    
+    explode_imc = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    explode_imc[tipo - 1] = 0.1
+
+    explode_exercise = [0.0, 0.0, 0.0]
+    if frequencia_minima > current_user.frequencia:
+        index_a_substituir = 0
+    elif frequencia_minima <= current_user.frequencia < frequencia_ideal:
+        index_a_substituir = 1
+    else:
+        index_a_substituir = 2
+    explode_exercise[index_a_substituir] = 0.1
+    
     user_df = table_to_dataframe(Usuario)
     conditions_imc = [
         (user_df['IMC'] < 18.6),
@@ -109,18 +93,16 @@ def dados():
     graficos_path = 'SuaSaude/static/graficos'
     os.makedirs(graficos_path, exist_ok=True)
 
-    def create_pie_chart(data, title, file_path):
+    def create_pie_chart(data, file_path, explode_list):
         plt.figure(figsize=(8, 8))
-        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140)
-        plt.title(title)
+        plt.pie(values, labels=values.index, autopct='%1.1f%%', explode=explode_list, textprops={'fontsize': 20})
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)
         plt.close()
 
     try:
-        create_pie_chart(imc_counts, 'Distribuição de IMC', os.path.join(graficos_path, 'grafico_imc.png'))
-        create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício',
-                         os.path.join(graficos_path, 'grafico_exercise.png'))
+        create_pie_chart(imc_counts, os.path.join(graficos_path, 'grafico_imc.png'), explode_imc)
+        create_pie_chart(exercise_counts, os.path.join(graficos_path, 'grafico_exercise.png'), explode_exercise)
         print("Gráficos salvos com sucesso.")
     except Exception as e:
         print(f"Erro ao salvar gráficos: {e}")

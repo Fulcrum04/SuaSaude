@@ -78,31 +78,31 @@ def dados():
     def classify_exercise(row):
         if row['idade'] < 18:
             if row['frequencia'] < 300:
-                return 'Pouco/Nenhum exercício'
+                return 'Pouca/Nenhuma'
             elif 300 <= row['frequencia'] <= 420:
-                return 'Frequência Mínima'
+                return 'Mínima'
             else:
-                return 'Frequência Ideal'
+                return 'Ideal'
         elif 18 <= row['idade'] <= 65:
             if row['frequencia'] < 150:
-                return 'Pouco/Nenhum exercício'
+                return 'Pouca/Nenhuma'
             elif 150 <= row['frequencia'] <= 300:
-                return 'Frequência Mínima'
+                return 'Mínima'
             else:
-                return 'Frequência Ideal'
+                return 'Ideal'
         else:  # idade > 65
             if row['frequencia'] < 75:
-                return 'Pouco/Nenhum exercício'
+                return 'Pouca/Nenhuma'
             elif 75 <= row['frequencia'] <= 150:
-                return 'Frequência Mínima'
+                return 'Mínima'
             else:
-                return 'Frequência Ideal'
+                return 'Ideal'
 
     user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
 
     # Contagem das classificações de frequência de exercício
     exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
-        ['Pouco/Nenhum exercício', 'Frequência Mínima', 'Frequência Ideal'], fill_value=0).reset_index()
+        ['Pouca/Nenhuma', 'Mínima', 'Ideal'], fill_value=0).reset_index()
     exercise_counts.columns = ['index', 'quantidade']
 
     # Criação e salvamento dos gráficos de pizza

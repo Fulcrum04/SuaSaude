@@ -19,7 +19,7 @@ def plot_exercise_pie_chart(exercise_condition, user_df):
     # Explosão do gráfico para destacar a fatia correspondente ao exercício do usuário atual
     explode = [0.1 if label == exercise_condition else 0 for label in values.index]
     
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(10, 8))
     plt.pie(values, labels=values.index, autopct='%1.1f%%', explode=explode, textprops={'fontsize': 20})
     plt.savefig('static/graficos/grafico_exercise.png', bbox_inches='tight')
     plt.close()
@@ -32,7 +32,7 @@ def plot_imc_pie_chart(imc_category, user_df):
     # Explosão do gráfico para destacar a fatia correspondente ao IMC do usuário atual
     explode = [0.1 if label == imc_category else 0 for label in values.index]
     
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(10, 8))
     plt.pie(values, labels=values.index, autopct='%1.1f%%', explode=explode, textprops={'fontsize': 20})
     plt.savefig('static/graficos/grafico_imc.png', bbox_inches='tight')
     plt.close()

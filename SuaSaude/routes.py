@@ -57,7 +57,10 @@ def contato():
 
 @app.route('/dados')
 def dados():
+    @login_required
     user_df = table_to_dataframe(Usuario)
+
+    # Classificações de IMC
     conditions_imc = [
         (user_df['IMC'] < 18.6),
         (user_df['IMC'] >= 18.6) & (user_df['IMC'] < 25),
@@ -67,8 +70,7 @@ def dados():
         (user_df['IMC'] >= 40)
     ]
     choices_imc = ['Abaixo do Peso', 'Peso Ideal', 'Acima do Peso', 'Obesidade I', 'Obesidade II', 'Obesidade III']
-    user_df['IMC_Class'] = pd.cut(user_df['IMC'], bins=[-float('inf'), 18.6, 25, 30, 35, 40, float('inf')],
-                                  labels=choices_imc)
+    user_df['IMC_Class'] = pd.cut(user_df['IMC'], bins=[-float('inf'), 18.6, 25, 30, 35, 40, float('inf')], labels=choices_imc)
 
     # Contagem das classificações de IMC
     imc_counts = user_df['IMC_Class'].value_counts().reindex(choices_imc, fill_value=0).reset_index()
@@ -101,26 +103,52 @@ def dados():
     user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
 
     # Contagem das classificações de frequência de exercício
-    exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
-        ['Pouco/Nenhum exercício', 'Frequência Mínima', 'Frequência Ideal'], fill_value=0).reset_index()
+    exercise_counts = user_df['Exercise_Class'].value_counts().reindex(['Pouco/Nenhum exercício', 'Frequência Mínima', 'Frequência Ideal'], fill_value=0).reset_index()
     exercise_counts.columns = ['index', 'quantidade']
 
+    # Função para determinar qual fatia explodir
+    def get_explode(data, condition):
+        explode = [0] * len(data)
+        index_to_explode = data.index[data['index'] == condition].tolist()
+        if index_to_explode:
+            explode[index_to_explode[0]] = 0.1
+        return explode
+
+    # Determinar qual fatia explodir para IMC
+    imc_condition = None
+    if current_user.IMC < 18.6:
+        imc_condition = 'Abaixo do Peso'
+    elif 18.6 <= current_user.IMC < 25:
+        imc_condition = 'Peso Ideal'
+    elif 25 <= current_user.IMC < 30:
+        imc_condition = 'Acima do Peso'
+    elif 30 <= current_user.IMC < 35:
+        imc_condition = 'Obesidade I'
+    elif 35 <= current_user.IMC < 40:
+        imc_condition = 'Obesidade II'
+    elif current_user.IMC >= 40:
+        imc_condition = 'Obesidade III'
+
+    imc_explode = get_explode(imc_counts, imc_condition)
+
+    # Determinar qual fatia explodir para exercício
+    exercise_condition = classify_exercise(current_user)
+    exercise_explode = get_explode(exercise_counts, exercise_condition)
+
     # Criação e salvamento dos gráficos de pizza
-    graficos_path = 'SuaSaude/static/graficos'
+    graficos_path = 'static/graficos'
     os.makedirs(graficos_path, exist_ok=True)
 
-    def create_pie_chart(data, title, file_path):
+    def create_pie_chart(data, file_path, explode):
         plt.figure(figsize=(8, 8))
-        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140)
-        plt.title(title)
+        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, explode=explode, textprops={'fontsize': 14})
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)
         plt.close()
 
     try:
-        create_pie_chart(imc_counts, 'Distribuição de IMC', os.path.join(graficos_path, 'grafico_imc.png'))
-        create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício',
-                         os.path.join(graficos_path, 'grafico_exercise.png'))
+        create_pie_chart(imc_counts, os.path.join(graficos_path, 'grafico_imc.png'), imc_explode)
+        create_pie_chart(exercise_counts, os.path.join(graficos_path, 'grafico_exercise.png'), exercise_explode)
         print("Gráficos salvos com sucesso.")
     except Exception as e:
         print(f"Erro ao salvar gráficos: {e}")

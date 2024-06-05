@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<title>Gráficos de IMC e Exercício</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos de IMC e Exercício</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
         .container {
             display: flex;
             flex-direction: row;
             justify-content: space-around;
             align-items: center;
             width: 80%;
+            margin: 0 auto;
+            padding-top: 20px;
         }
         .column {
             flex: 1;
@@ -27,6 +24,7 @@
             height: auto;
         }
     </style>
+</head>
 <body>
     <div class="container">
         <div class="column">

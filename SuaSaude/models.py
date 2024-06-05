@@ -62,6 +62,17 @@ def classify_exercise(user):
             return 'Ideal'
 
 
+def classify_imc(user):
+    if user.IMC < 18.5:
+        return 'Baixo Peso'
+    elif 18.5 <= user.IMC < 24.9:
+        return 'Peso Normal'
+    elif 24.9 <= user.IMC < 29.9:
+        return 'Sobrepeso'
+    else:
+        return 'Obesidade'
+
+
 @login_manager.user_loader
 def load_usuario(id_usuario):
     return Usuario.query.get(int(id_usuario))

@@ -75,25 +75,25 @@ def dados():
     imc_counts.columns = ['index', 'quantidade']
 
     # Classificações de Frequência de Exercício
-    def classify_exercise(row):
-        if row['idade'] < 18:
-            if row['frequencia'] < 300:
-                return 'Pouca/Nenhuma'
-            elif 300 <= row['frequencia'] <= 420:
+    def classify_exercise(user):
+        if user.idade < 18:
+            if user.frequencia < 300:
+                return 'Nenhuma'
+            elif 300 <= user.frequencia <= 420:
                 return 'Mínima'
             else:
                 return 'Ideal'
-        elif 18 <= row['idade'] <= 65:
-            if row['frequencia'] < 150:
-                return 'Pouca/Nenhuma'
-            elif 150 <= row['frequencia'] <= 300:
+        elif 18 <= user.idade <= 65:
+            if user.frequencia < 150:
+                return 'Nenhuma'
+            elif 150 <= user.frequencia <= 300:
                 return 'Mínima'
             else:
                 return 'Ideal'
         else:  # idade > 65
-            if row['frequencia'] < 75:
-                return 'Pouca/Nenhuma'
-            elif 75 <= row['frequencia'] <= 150:
+            if user.frequencia < 75:
+                return 'Nenhuma'
+            elif 75 <= user.frequencia <= 150:
                 return 'Mínima'
             else:
                 return 'Ideal'

@@ -111,7 +111,7 @@ def dados():
 
     def create_pie_chart(data, title, file_path):
         plt.figure(figsize=(10, 8))
-        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, textprops={'fontsize': 30})
+        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, textprops={'fontsize': 20})
         #plt.title(title)
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)

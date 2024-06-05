@@ -58,8 +58,6 @@ def contato():
 @app.route('/dados')
 def dados():
     user_df = table_to_dataframe(Usuario)
-
-    # Classificações de IMC
     conditions_imc = [
         (user_df['IMC'] < 18.6),
         (user_df['IMC'] >= 18.6) & (user_df['IMC'] < 25),
@@ -69,41 +67,38 @@ def dados():
         (user_df['IMC'] >= 40)
     ]
     choices_imc = ['Abaixo do Peso', 'Peso Ideal', 'Acima do Peso', 'Obesidade I', 'Obesidade II', 'Obesidade III']
-    user_df['IMC_Class'] = pd.cut(user_df['IMC'], bins=[-float('inf'), 18.6, 25, 30, 35, 40, float('inf')], labels=choices_imc)
+    user_df['IMC_Class'] = pd.cut(user_df['IMC'], bins=[-float('inf'), 18.6, 25, 30, 35, 40, float('inf')],
+                                  labels=choices_imc)
 
     # Contagem das classificações de IMC
     imc_counts = user_df['IMC_Class'].value_counts().reindex(choices_imc, fill_value=0).reset_index()
     imc_counts.columns = ['index', 'quantidade']
 
     # Classificações de Frequência de Exercício
-    def classify_exercise(user):
-        if user.idade < 18:
-            if user.frequencia < 300:
+    def classify_exercise(row):
+        if row['idade'] < 18:
+            if row['frequencia'] < 300:
                 return 'Pouca/Nenhuma'
-            elif 300 <= user.frequencia <= 420:
+            elif 300 <= row['frequencia'] <= 420:
                 return 'Mínima'
             else:
                 return 'Ideal'
-        elif 18 <= user.idade <= 65:
-            if user.frequencia < 150:
+        elif 18 <= row['idade'] <= 65:
+            if row['frequencia'] < 150:
                 return 'Pouca/Nenhuma'
-            elif 150 <= user.frequencia <= 300:
+            elif 150 <= row['frequencia'] <= 300:
                 return 'Mínima'
             else:
                 return 'Ideal'
         else:  # idade > 65
-            if user.frequencia < 75:
+            if row['frequencia'] < 75:
                 return 'Pouca/Nenhuma'
-            elif 75 <= user.frequencia <= 150:
+            elif 75 <= row['frequencia'] <= 150:
                 return 'Mínima'
             else:
                 return 'Ideal'
 
-    user_df['Exercise_Class'] = user_df.apply(lambda row: classify_exercise(row), axis=1)
-
-    # Contagem das classificações de frequência de exercício
-    exercise_counts = user_df['Exercise_Class'].value_counts().reindex(['Pouca/Nenhuma', 'Mínima', 'Ideal'], fill_value=0).reset_index()
-    exercise_counts.columns = ['index', 'quantidade']
+    user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
 
     # Função para determinar qual fatia explodir
     def get_explode(data, condition):
@@ -133,26 +128,34 @@ def dados():
     # Determinar qual fatia explodir para exercício
     exercise_condition = classify_exercise(current_user)
     exercise_explode = get_explode(exercise_counts, exercise_condition)
+    
+    # Contagem das classificações de frequência de exercício
+    exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
+        ['Pouca/Nenhuma', 'Mínima', 'Ideal'], fill_value=0).reset_index()
+    exercise_counts.columns = ['index', 'quantidade']
 
     # Criação e salvamento dos gráficos de pizza
-    graficos_path = 'static/graficos'
+    graficos_path = 'SuaSaude/static/graficos'
     os.makedirs(graficos_path, exist_ok=True)
 
-    def create_pie_chart(data, file_path, explode):
+    def create_pie_chart(data, title, file_path):
         plt.figure(figsize=(10, 8))
         plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, explode=explode, textprops={'fontsize': 20})
+        #plt.title(title)
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)
         plt.close()
 
     try:
-        create_pie_chart(imc_counts, os.path.join(graficos_path, 'grafico_imc.png'), imc_explode)
-        create_pie_chart(exercise_counts, os.path.join(graficos_path, 'grafico_exercise.png'), exercise_explode)
+        create_pie_chart(imc_counts, 'Distribuição de IMC', os.path.join(graficos_path, 'grafico_imc.png'))
+        create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício',
+                         os.path.join(graficos_path, 'grafico_exercise.png'))
         print("Gráficos salvos com sucesso.")
     except Exception as e:
         print(f"Erro ao salvar gráficos: {e}")
 
     return render_template('dados.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

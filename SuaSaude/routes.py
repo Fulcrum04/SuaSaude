@@ -98,7 +98,7 @@ def dados():
             else:
                 return 'Ideal'
 
-    user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
+    user_df['Exercise_Class'] = user_df.apply(lambda row: classify_exercise(row), axis=1)
 
     # Função para determinar qual fatia explodir
     def get_explode(data, condition):

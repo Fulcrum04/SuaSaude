@@ -5,8 +5,9 @@ import pandas as pd
 
 
 def table_to_dataframe(table):
-    query = db.session.query(table).statement
-    df = pd.read_sql(query, db.session.bind)
+    query = db.session.query(table).all()
+    df = pd.DataFrame([item.__dict__ for item in query])
+    df.drop('_sa_instance_state', axis=1, inplace=True)
     return df
 
 

@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, abort
 from SuaSaude.forms import FormCriarConta, FormLogin, FormEditarPerfil
 from SuaSaude import app, db, bcrypt, login_manager
-from SuaSaude.models import Usuario, Links, table_to_dataframe, classify_exercise, plot_exercise_pie_chart, plot_imc_pie_chart
+from SuaSaude.models import Usuario, Links, table_to_dataframe, classify_exercise, classify_imc, plot_exercise_pie_chart, plot_imc_pie_chart
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os

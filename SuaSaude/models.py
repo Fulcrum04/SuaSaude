@@ -1,6 +1,13 @@
 from SuaSaude import db, app, login_manager
 from datetime import datetime
 from flask_login import UserMixin
+import pandas as pd
+
+
+def table_to_dataframe(table):
+    query = db.session.query(table).statement
+    df = pd.read_sql(query, db.session.bind)
+    return df
 
 
 @login_manager.user_loader

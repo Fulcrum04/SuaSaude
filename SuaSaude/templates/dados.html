@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<title>Gráficos de IMC e Exercício</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 80%;
+        }
+        .column {
+            flex: 1;
+            text-align: center;
+        }
+        img {
+            width: 80%;
+            height: auto;
+        }
+    </style>
+<body>
+    <div class="container">
+        <div class="column">
+            <h2>Distribuição de Frequência de Exercício</h2>
+            <img src="{{ url_for('static', filename='graficos/grafico_exercise.png') }}" alt="Gráfico de Exercício">
+        </div>
+        <div class="column">
+            <h2>Distribuição de IMC</h2>
+            <img src="{{ url_for('static', filename='graficos/grafico_imc.png') }}" alt="Gráfico de IMC">
+        </div>
+    </div>
+</body>
+{% endblock %}

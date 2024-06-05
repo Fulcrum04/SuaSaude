@@ -1,11 +1,13 @@
 from flask import render_template, redirect, url_for, flash, request, abort
 from SuaSaude.forms import FormCriarConta, FormLogin, FormEditarPerfil
 from SuaSaude import app, db, bcrypt, login_manager
-from SuaSaude.models import Usuario, Links
+from SuaSaude.models import Usuario, Links, table_to_dataframe
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
 from PIL import Image
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
 @app.route('/')
@@ -51,6 +53,73 @@ def home():
 @app.route('/contato')
 def contato():
     return render_template('contato.html')
+
+
+@app.route('/dados')
+def dados():
+    user_df = table_to_dataframe(Usuario)
+    conditions_imc = [
+        (user_df['IMC'] < 18.6),
+        (user_df['IMC'] >= 18.6) & (user_df['IMC'] < 25),
+        (user_df['IMC'] >= 25) & (user_df['IMC'] < 30),
+        (user_df['IMC'] >= 30) & (user_df['IMC'] < 35),
+        (user_df['IMC'] >= 35) & (user_df['IMC'] < 40),
+        (user_df['IMC'] >= 40)
+    ]
+    choices_imc = ['Abaixo do Peso', 'Peso Ideal', 'Acima do Peso', 'Obesidade I', 'Obesidade II', 'Obesidade III']
+    user_df['IMC_Class'] = pd.cut(user_df['IMC'], bins=[-float('inf'), 18.6, 25, 30, 35, 40, float('inf')],
+                                  labels=choices_imc)
+
+    # Contagem das classificações de IMC
+    imc_counts = user_df['IMC_Class'].value_counts().reindex(choices_imc, fill_value=0).reset_index()
+    imc_counts.columns = ['index', 'quantidade']
+
+    # Classificações de Frequência de Exercício
+    def classify_exercise(row):
+        if row['idade'] < 18:
+            if row['frequencia'] < 300:
+                return 'Pouco/Nenhum exercício'
+            elif 300 <= row['frequencia'] <= 420:
+                return 'Frequência Mínima'
+            else:
+                return 'Frequência Ideal'
+        elif 18 <= row['idade'] <= 65:
+            if row['frequencia'] < 150:
+                return 'Pouco/Nenhum exercício'
+            elif 150 <= row['frequencia'] <= 300:
+                return 'Frequência Mínima'
+            else:
+                return 'Frequência Ideal'
+        else:  # idade > 65
+            if row['frequencia'] < 75:
+                return 'Pouco/Nenhum exercício'
+            elif 75 <= row['frequencia'] <= 150:
+                return 'Frequência Mínima'
+            else:
+                return 'Frequência Ideal'
+
+    user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
+
+    # Contagem das classificações de frequência de exercício
+    exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
+        ['Pouco/Nenhum exercício', 'Frequência Mínima', 'Frequência Ideal'], fill_value=0).reset_index()
+    exercise_counts.columns = ['index', 'quantidade']
+
+    # Função para criar e salvar gráficos de pizza
+    def create_pie_chart(data, title, file_path):
+        plt.figure(figsize=(8, 8))
+        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140)
+        plt.title(title)
+        plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.savefig(file_path)
+        plt.close()
+
+    # Criando e salvando os gráficos de pizza
+    create_pie_chart(imc_counts, 'Distribuição de IMC', 'static/graficos/grafico_imc.png')
+    create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício', 'static/graficos/grafico_exercise.png')
+
+    # Exibição dos dataframes resultantes
+    return render_template('dados.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

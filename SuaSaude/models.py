@@ -4,6 +4,41 @@ from flask_login import UserMixin
 import pandas as pd
 
 
+def classificar_usuario(current_user):
+    #filtrar posts de acordo com o IMC do usuário
+    if current_user.IMC < 18.6:
+        tipo = 1
+        posts = Links.query.filter_by(tipo=tipo)
+    elif current_user.IMC < 25:
+        tipo = 2
+        posts = Links.query.filter_by(tipo=tipo)
+    elif current_user.IMC < 30:
+        tipo = 3
+        posts = Links.query.filter_by(tipo=tipo)
+    elif current_user.IMC < 35:
+        tipo = 4
+        posts = Links.query.filter_by(tipo=tipo)
+    elif current_user.IMC < 40:
+        tipo = 5
+        posts = Links.query.filter_by(tipo=tipo)
+    else:
+        tipo = 6
+        posts = Links.query.filter_by(tipo=tipo)
+    if current_user.idade < 18:
+        faixa_etaria = 1
+        frequencia_minima = 300
+        frequencia_ideal = 420
+    elif current_user.idade < 64:
+        faixa_etaria = 2
+        frequencia_minima = 150
+        frequencia_ideal = 300
+    else:
+        faixa_etaria = 3
+        frequencia_minima = 75
+        frequencia_ideal = 150
+    return tipo, posts, faixa_etaria, frequencia_minima, frequencia_ideal
+
+
 def table_to_dataframe(table):
     query = db.session.query(table).all()
     df = pd.DataFrame([item.__dict__ for item in query])

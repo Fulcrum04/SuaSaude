@@ -124,15 +124,15 @@ def dados():
         imc_condition = 'Obesidade III'
 
     imc_explode = get_explode(imc_counts, imc_condition)
-
-    # Determinar qual fatia explodir para exercício
-    exercise_condition = classify_exercise(current_user)
-    exercise_explode = get_explode(exercise_counts, exercise_condition)
     
     # Contagem das classificações de frequência de exercício
     exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
         ['Pouca/Nenhuma', 'Mínima', 'Ideal'], fill_value=0).reset_index()
     exercise_counts.columns = ['index', 'quantidade']
+
+        # Determinar qual fatia explodir para exercício
+    exercise_condition = classify_exercise(current_user)
+    exercise_explode = get_explode(exercise_counts, exercise_condition)
 
     # Criação e salvamento dos gráficos de pizza
     graficos_path = 'SuaSaude/static/graficos'

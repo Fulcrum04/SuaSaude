@@ -100,6 +100,35 @@ def dados():
 
     user_df['Exercise_Class'] = user_df.apply(classify_exercise, axis=1)
 
+    # Função para determinar qual fatia explodir
+    def get_explode(data, condition):
+        explode = [0] * len(data)
+        index_to_explode = data.index[data['index'] == condition].tolist()
+        if index_to_explode:
+            explode[index_to_explode[0]] = 0.1
+        return explode
+
+    # Determinar qual fatia explodir para IMC
+    imc_condition = None
+    if current_user.IMC < 18.6:
+        imc_condition = 'Abaixo do Peso'
+    elif 18.6 <= current_user.IMC < 25:
+        imc_condition = 'Peso Ideal'
+    elif 25 <= current_user.IMC < 30:
+        imc_condition = 'Acima do Peso'
+    elif 30 <= current_user.IMC < 35:
+        imc_condition = 'Obesidade I'
+    elif 35 <= current_user.IMC < 40:
+        imc_condition = 'Obesidade II'
+    elif current_user.IMC >= 40:
+        imc_condition = 'Obesidade III'
+
+    imc_explode = get_explode(imc_counts, imc_condition)
+
+    # Determinar qual fatia explodir para exercício
+    exercise_condition = classify_exercise(current_user)
+    exercise_explode = get_explode(exercise_counts, exercise_condition)
+    
     # Contagem das classificações de frequência de exercício
     exercise_counts = user_df['Exercise_Class'].value_counts().reindex(
         ['Pouca/Nenhuma', 'Mínima', 'Ideal'], fill_value=0).reset_index()
@@ -111,7 +140,7 @@ def dados():
 
     def create_pie_chart(data, title, file_path):
         plt.figure(figsize=(10, 8))
-        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, textprops={'fontsize': 20})
+        plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, explode=explode, textprops={'fontsize': 20})
         #plt.title(title)
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)

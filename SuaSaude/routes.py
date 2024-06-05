@@ -94,7 +94,7 @@ def dados():
     os.makedirs(graficos_path, exist_ok=True)
 
     def create_pie_chart(data, file_path, explode_list):
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(10, 8))
         plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140, explode=explode_list, textprops={'fontsize': 20})
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(file_path)

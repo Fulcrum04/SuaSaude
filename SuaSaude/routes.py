@@ -106,9 +106,9 @@ def dados():
     exercise_counts.columns = ['index', 'quantidade']
 
     # Criação e salvamento dos gráficos de pizza
-    os.makedirs('static/graficos', exist_ok=True)
+    graficos_path = 'static/graficos'
+    os.makedirs(graficos_path, exist_ok=True)
 
-    # Função para criar e salvar gráficos de pizza
     def create_pie_chart(data, title, file_path):
         plt.figure(figsize=(8, 8))
         plt.pie(data['quantidade'], labels=data['index'], autopct='%1.1f%%', startangle=140)
@@ -117,11 +117,14 @@ def dados():
         plt.savefig(file_path)
         plt.close()
 
-    # Criando e salvando os gráficos de pizza
-    create_pie_chart(imc_counts, 'Distribuição de IMC', 'static/graficos/grafico_imc.png')
-    create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício', 'static/graficos/grafico_exercise.png')
+    try:
+        create_pie_chart(imc_counts, 'Distribuição de IMC', os.path.join(graficos_path, 'grafico_imc.png'))
+        create_pie_chart(exercise_counts, 'Distribuição de Frequência de Exercício',
+                         os.path.join(graficos_path, 'grafico_exercise.png'))
+        print("Gráficos salvos com sucesso.")
+    except Exception as e:
+        print(f"Erro ao salvar gráficos: {e}")
 
-    # Exibição dos dataframes resultantes
     return render_template('dados.html')
 
 

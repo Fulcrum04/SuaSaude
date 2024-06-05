@@ -21,7 +21,7 @@ def plot_exercise_pie_chart(exercise_condition, user_df):
     
     plt.figure(figsize=(10, 8))
     plt.pie(values, labels=values.index, autopct='%1.1f%%', explode=explode, textprops={'fontsize': 20})
-    plt.savefig('static/graficos/grafico_exercise.png', bbox_inches='tight')
+    plt.savefig('SuaSaude/static/graficos/grafico_exercise.png', bbox_inches='tight')
     plt.close()
 
 
@@ -34,7 +34,7 @@ def plot_imc_pie_chart(imc_category, user_df):
     
     plt.figure(figsize=(10, 8))
     plt.pie(values, labels=values.index, autopct='%1.1f%%', explode=explode, textprops={'fontsize': 20})
-    plt.savefig('static/graficos/grafico_imc.png', bbox_inches='tight')
+    plt.savefig('SuaSaude/static/graficos/grafico_imc.png', bbox_inches='tight')
     plt.close()
 
 

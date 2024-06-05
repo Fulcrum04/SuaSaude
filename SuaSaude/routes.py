@@ -105,6 +105,9 @@ def dados():
         ['Pouco/Nenhum exercício', 'Frequência Mínima', 'Frequência Ideal'], fill_value=0).reset_index()
     exercise_counts.columns = ['index', 'quantidade']
 
+    # Criação e salvamento dos gráficos de pizza
+    os.makedirs('static/graficos', exist_ok=True)
+
     # Função para criar e salvar gráficos de pizza
     def create_pie_chart(data, title, file_path):
         plt.figure(figsize=(8, 8))

@@ -106,7 +106,7 @@ def dados():
     exercise_counts.columns = ['index', 'quantidade']
 
     # Criação e salvamento dos gráficos de pizza
-    graficos_path = 'static/graficos'
+    graficos_path = 'SuaSaude/static/graficos'
     os.makedirs(graficos_path, exist_ok=True)
 
     def create_pie_chart(data, title, file_path):

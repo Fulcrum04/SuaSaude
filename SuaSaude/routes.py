@@ -26,6 +26,7 @@ def contato():
 
 
 @app.route('/dados')
+@login_required
 def dados():
     tipo, posts, faixa_etaria, frequencia_minima, frequencia_ideal = classificar_usuario(current_user)
     
